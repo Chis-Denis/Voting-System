@@ -1,139 +1,176 @@
 # 🗳️ Romanian Online Voting System
 
-**A comprehensive online voting platform designed for Romanian national elections, built with ASP.NET Core 8.0 and Entity Framework Core.**
+A modern, secure, and user-friendly online voting platform designed for Romanian elections. This system allows citizens to participate in various types of elections from the comfort of their homes, with real-time statistics and transparent results.
 
-## 🎯 **Primary Goal: Online Voting for Romanian Elections**
+## ✨ What Makes This Special?
 
-This system is specifically designed to **enable secure, transparent, and accessible online voting** for Romanian citizens during national elections. The platform manages political parties, candidates, and provides the foundation for implementing secure digital voting mechanisms.
+We've built this system with **you** in mind. No complicated forms, no confusing interfaces—just a clean, beautiful design that makes voting as simple as clicking a few buttons. Whether you're voting in local elections, parliamentary elections, presidential elections, or referendums, everything is right at your fingertips.
 
-## 🏛️ **What This System Does**
+## 🔐 Secure Authentication
 
-**Core Purpose**: Create a digital infrastructure for Romanian citizens to vote online in elections, replacing or supplementing traditional paper-based voting.
+**Login with Your ID Card** - Your security is our top priority. The system uses your Romanian national ID card for authentication, ensuring that only eligible voters can participate. This two-factor verification process protects the integrity of every election and gives you confidence that your vote matters.
 
-**Key Features**:
-- **Political Party Management**: Full CRUD operations for Romanian political parties
-- **Candidate Management**: Complete candidate lifecycle management with party associations  
-- **Voting Infrastructure**: Foundation for implementing secure online voting mechanisms
-- **Statistics Dashboard**: Real-time analytics for election monitoring
-- **Automated Testing**: Background service for generating sample election data
+*Note: The ID card authentication system is currently being finalized and will be available in the next update.*
 
-## 🏗️ **Technology Stack**
+## 🎯 Features
 
-- **Backend**: ASP.NET Core 8.0 MVC
-- **Database**: SQL Server with Entity Framework Core 8.0.6
-- **Frontend**: Razor Views with Bootstrap
-- **Containerization**: Docker support
-- **Deployment**: Heroku-ready
+### 📊 View Ongoing Elections
+- Browse all active elections in one place
+- Filter by election type (Local, Parliamentarian, Presidential, Referendum)
+- See election details, dates, and current status at a glance
 
-## 🚀 **Quick Start**
+### 🗳️ Cast Your Vote
+- Simple, intuitive voting interface
+- Select your county and preferred candidate
+- Real-time vote confirmation
+- Your vote is recorded securely and anonymously
+
+### 📈 Real-Time Statistics
+Once you click on any election, you'll see comprehensive statistics including:
+
+- **Overall Statistics**
+  - Total votes cast
+  - Total eligible voters
+  - Voter turnout percentage
+
+- **Candidate Results**
+  - Ranked list of all candidates
+  - Individual vote counts
+  - Percentage of total votes
+  - Visual progress bars for easy comparison
+
+- **Party Statistics**
+  - Total votes per party
+  - Party vote percentages
+  - Number of candidates per party
+  - Clear breakdown of party performance
+
+- **County Statistics**
+  - Votes cast per county
+  - Eligible voters per county
+  - Turnout percentage for each of Romania's 41 counties
+  - Sorted by highest turnout for easy analysis
+
+### 🏛️ Manage Political Parties
+- View all registered political parties
+- See party descriptions and logos
+- Manage party information
+
+### 👥 Manage Candidates
+- View all election candidates
+- See candidate profiles with photos
+- View party affiliations
+- Manage candidate information
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- .NET 8.0 SDK
-- SQL Server (LocalDB recommended)
-- Visual Studio 2022 or VS Code
+- .NET 8.0 SDK or later
+- SQL Server (LocalDB or full SQL Server instance)
+- A modern web browser
 
 ### Installation
-```bash
-git clone <repository-url>
-cd MPP-SMTH
-dotnet restore
-dotnet ef database update
-dotnet run
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd MPP-SMTH
+   ```
+
+2. **Configure the database**
+   - Open `appsettings.json`
+   - Update the `DefaultConnection` string with your SQL Server connection details:
+   ```json
+   {
+     "ConnectionStrings": {
+       "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=RomanianVotingDB;Trusted_Connection=True;MultipleActiveResultSets=true"
+     }
+   }
+   ```
+
+3. **Run database migrations**
+   ```bash
+   dotnet ef database update
+   ```
+
+4. **Run the application**
+   ```bash
+   dotnet run
+   ```
+
+5. **Open your browser**
+   - Navigate to `https://localhost:7262` (or the port shown in your terminal)
+   - Start exploring!
+
+## 📁 Project Structure
+
+```
+MPP-SMTH/
+├── Backend/
+│   ├── Controllers/          # MVC Controllers
+│   ├── Data/                 # Database context and repositories
+│   ├── Domain/               # Core entities (Election, Candidate, Party, Vote, County)
+│   ├── Services/             # Business logic layer
+│   └── ViewModels/           # Data transfer objects
+├── Frontend/
+│   ├── Views/                # Razor views
+│   └── wwwroot/              # Static files (CSS, JS, images)
+└── appsettings.json          # Configuration file
 ```
 
-Access at `https://localhost:5001`
+## 🎨 Design Philosophy
 
-## 📊 **Data Models**
+We believe that voting should be **beautiful** and **accessible**. That's why we've designed this system with:
 
-### Party Model
-- **PartyId**: Unique identifier
-- **Name**: Party name (PSD, PNL, USR, AUR, etc.)
-- **Description**: Party description
-- **LogoUrl**: Party logo
-- **Candidates**: Associated candidates
+- **Dark Theme** - Easy on the eyes, especially for long browsing sessions
+- **Minimalist Design** - Clean, uncluttered interface that focuses on what matters
+- **Responsive Layout** - Works perfectly on desktop, tablet, and mobile devices
+- **Intuitive Navigation** - Find what you need in seconds, not minutes
 
-### Candidate Model  
-- **CandidateId**: Unique identifier
-- **Name**: Candidate full name
-- **Description**: Candidate description
-- **ImageUrl**: Candidate photo
-- **Age**: Candidate age (18-120)
-- **Position**: Political position (Deputat, Senator, etc.)
-- **PartyId**: Associated party
+## 🗺️ Romanian Counties
 
-## 🔧 **How to Use**
+The system includes all 41 Romanian counties with realistic eligible voter counts:
+- Alba, Arad, Argeș, Bacău, Bihor, Bistrița-Năsăud, Botoșani, Brașov, Brăila
+- București (with the highest eligible voter count)
+- And 32 more counties...
 
-### Managing Elections
-1. **Parties**: Navigate to `/Party` to manage political parties
-2. **Candidates**: Go to `/Candidate` to manage election candidates
-3. **Statistics**: Visit `/Statistics` for election overview
-4. **Auto-Generation**: Use automated tools to populate sample election data
+Each county's statistics are tracked individually, giving you detailed insights into regional voting patterns.
 
-### Romanian Election Context
-The system comes pre-loaded with major Romanian political parties:
-- **PSD** (Partidul Social Democrat)
-- **PNL** (Partidul Național Liberal) 
-- **USR** (Uniunea Salvați România)
-- **AUR** (Alianța pentru Unirea Românilor)
+## 🔄 How Voting Works
 
-## 🗳️ **Voting System Foundation**
+1. **Browse Elections** - Start on the home page and see all ongoing elections
+2. **Select an Election** - Click "View Details & Vote" on any election that interests you
+3. **Review Candidates** - See all candidates running in that election with their party affiliations
+4. **Cast Your Vote** - Select your county and your preferred candidate
+5. **Confirm** - Your vote is recorded securely
+6. **View Results** - See real-time statistics update as votes come in
 
-**This application serves as the foundation for implementing:**
-- **Secure Online Voting**: Digital ballot casting for Romanian citizens
-- **Voter Authentication**: Secure identity verification systems
-- **Real-time Results**: Live election result tracking
-- **Audit Trails**: Complete voting record maintenance
-- **Accessibility**: Voting from anywhere with internet access
+## 📊 Statistics Explained
 
-## 🐳 **Docker Support**
+- **Voter Turnout**: The percentage of eligible voters who have actually cast their vote
+- **Candidate Percentage**: What percentage of total votes each candidate has received
+- **Party Percentage**: What percentage of total votes each party has received
+- **County Turnout**: How engaged voters are in each county
 
-```bash
-docker build -t romanian-voting-system .
-docker run -p 8080:80 romanian-voting-system
-```
+## 🛠️ Technology Stack
 
-## 🚀 **Deployment**
+- **Backend**: ASP.NET Core MVC (.NET 8.0)
+- **Database**: SQL Server with Entity Framework Core
+- **Frontend**: Razor Views with custom CSS
+- **Architecture**: Clean Architecture with Repository Pattern
 
-### Heroku
-- Includes Procfile for easy Heroku deployment
-- Configure database connection string
-- Run migrations
+## 🤝 Contributing
 
-### Azure
-- Publish to Azure App Service
-- Configure SQL Database connection
-- Deploy with Azure DevOps
+We welcome contributions! Whether it's fixing bugs, adding features, or improving documentation, every contribution helps make Romanian democracy more accessible.
 
-## 🔒 **Security Features**
+## 📝 License
 
-- **Anti-forgery Tokens**: CSRF protection
-- **Input Validation**: Comprehensive data validation
-- **SQL Injection Protection**: Entity Framework Core
-- **Authorization Framework**: Built-in ASP.NET Core security
+This project is part of an academic/research initiative to improve digital democracy in Romania.
 
-## 📝 **API Endpoints**
+## 🙏 Acknowledgments
 
-- **Parties**: `/Party` - Full CRUD operations
-- **Candidates**: `/Candidate` - Complete candidate management  
-- **Statistics**: `/Statistics` - Election analytics
-- **Auto-generation**: `/Candidate/StartGenerating` - Sample data creation
-
-## 🐛 **Troubleshooting**
-
-- **Database Issues**: Check LocalDB is running, verify connection string
-- **Migration Errors**: Drop and recreate database with `dotnet ef database drop`
-- **Port Conflicts**: Modify `launchSettings.json` if needed
+Built with ❤️ for the Romanian people, to make voting more accessible, transparent, and engaging.
 
 ---
 
-## 🎯 **Important Note**
-
-**This system is specifically designed to enable online voting for Romanian national elections.** It provides the complete infrastructure needed to conduct secure, transparent, and accessible digital voting, allowing Romanian citizens to participate in democracy from anywhere in the world.
-
-**When implementing actual voting functionality, ensure compliance with:**
-- Romanian electoral laws and regulations
-- European Union data protection standards (GDPR)
-- International election security best practices
-- Local data sovereignty requirements
-
-**Current Status**: Foundation complete - ready for voting mechanism implementation.
+**Remember**: Every vote counts. Your participation shapes the future of Romania. 🇷🇴
