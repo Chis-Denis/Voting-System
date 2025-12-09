@@ -1,39 +1,149 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<ASP1.Backend.ViewModels.ElectionViewModel>
+@{
+    ViewData["Title"] = "Home";
+    var selectedType = ViewBag.SelectedType as ASP1.Backend.Domain.Entities.ElectionType?;
 }
 
-@* Start of change: Beautiful homepage for party/candidate management system *@
-<div class="text-center mt-5">
-    <h1 class="display-3 mb-4">Welcome to the Romanian Party & Candidate Management System</h1>
-    <p class="lead mb-5">Explore Romanian political parties and their candidates. Use the navigation above to view, add, or manage parties and candidates.</p>
-    <div class="row justify-content-center">
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm h-100">
-                @* Start of change: Use SVG icon as fallback for PSD logo *@
-                <div class="d-flex justify-content-center align-items-center" style="height: 180px;">
-                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="10" fill="#e63946"/>
-                        <text x="12" y="16" text-anchor="middle" fill="white" font-size="2rem" font-family="Arial" font-weight="bold">PSD</text>
-                    </svg>
-                </div>
-                @* End of change: Use SVG icon as fallback for PSD logo *@
-                <div class="card-body">
-                    <h5 class="card-title">Parties</h5>
-                    <p class="card-text">View, add, edit, or delete Romanian political parties.</p>
-                    <a asp-controller="Party" asp-action="Index" class="btn btn-primary">Go to Parties</a>
-                </div>
+<div class="text-center mb-5">
+    <h1 class="mb-3">🗳️ Romanian Online Voting System</h1>
+    <p class="lead">View and participate in ongoing elections</p>
+</div>
+
+<!-- Filter Buttons -->
+<div class="btn-group mb-4" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;">
+    <a asp-action="Index" 
+       asp-route-type="" 
+       class="btn @(selectedType == null ? "btn-primary" : "btn-outline-primary")" 
+       style="display: inline-block; padding: 0.625rem 1.25rem; font-size: 0.875rem; font-weight: 500; border-radius: 0.5rem; border: 1px solid; cursor: pointer; text-decoration: none !important; @(selectedType == null ? "background-color: #2563eb; color: white !important; border-color: #2563eb;" : "background-color: transparent; color: #2563eb !important; border-color: #2563eb;")">
+        All Elections
+    </a>
+    <a asp-action="Index" 
+       asp-route-type="@ASP1.Backend.Domain.Entities.ElectionType.Local" 
+       class="btn @(selectedType == ASP1.Backend.Domain.Entities.ElectionType.Local ? "btn-primary" : "btn-outline-primary")"
+       style="display: inline-block; padding: 0.625rem 1.25rem; font-size: 0.875rem; font-weight: 500; border-radius: 0.5rem; border: 1px solid; cursor: pointer; text-decoration: none !important; @(selectedType == ASP1.Backend.Domain.Entities.ElectionType.Local ? "background-color: #2563eb; color: white !important; border-color: #2563eb;" : "background-color: transparent; color: #2563eb !important; border-color: #2563eb;")">
+        Local Elections
+    </a>
+    <a asp-action="Index" 
+       asp-route-type="@ASP1.Backend.Domain.Entities.ElectionType.Parliamentarian" 
+       class="btn @(selectedType == ASP1.Backend.Domain.Entities.ElectionType.Parliamentarian ? "btn-primary" : "btn-outline-primary")"
+       style="display: inline-block; padding: 0.625rem 1.25rem; font-size: 0.875rem; font-weight: 500; border-radius: 0.5rem; border: 1px solid; cursor: pointer; text-decoration: none !important; @(selectedType == ASP1.Backend.Domain.Entities.ElectionType.Parliamentarian ? "background-color: #2563eb; color: white !important; border-color: #2563eb;" : "background-color: transparent; color: #2563eb !important; border-color: #2563eb;")">
+        Parliamentarian
+    </a>
+    <a asp-action="Index" 
+       asp-route-type="@ASP1.Backend.Domain.Entities.ElectionType.Presidential" 
+       class="btn @(selectedType == ASP1.Backend.Domain.Entities.ElectionType.Presidential ? "btn-primary" : "btn-outline-primary")"
+       style="display: inline-block; padding: 0.625rem 1.25rem; font-size: 0.875rem; font-weight: 500; border-radius: 0.5rem; border: 1px solid; cursor: pointer; text-decoration: none !important; @(selectedType == ASP1.Backend.Domain.Entities.ElectionType.Presidential ? "background-color: #2563eb; color: white !important; border-color: #2563eb;" : "background-color: transparent; color: #2563eb !important; border-color: #2563eb;")">
+        Presidential
+    </a>
+    <a asp-action="Index" 
+       asp-route-type="@ASP1.Backend.Domain.Entities.ElectionType.Referendum" 
+       class="btn @(selectedType == ASP1.Backend.Domain.Entities.ElectionType.Referendum ? "btn-primary" : "btn-outline-primary")"
+       style="display: inline-block; padding: 0.625rem 1.25rem; font-size: 0.875rem; font-weight: 500; border-radius: 0.5rem; border: 1px solid; cursor: pointer; text-decoration: none !important; @(selectedType == ASP1.Backend.Domain.Entities.ElectionType.Referendum ? "background-color: #2563eb; color: white !important; border-color: #2563eb;" : "background-color: transparent; color: #2563eb !important; border-color: #2563eb;")">
+        Referendum
+    </a>
+</div>
+
+<!-- Elections Table -->
+<div class="card shadow-md mb-5">
+    <div class="card-header">
+        <h3 class="mb-0">Ongoing Elections</h3>
+    </div>
+    <div class="card-body" style="padding: 0;">
+        @if (Model != null && Model.Any())
+        {
+            <div style="overflow-x: auto;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">#</th>
+                            <th style="width: 25%;">Title</th>
+                            <th style="width: 15%;">Type</th>
+                            <th style="width: 25%;">Description</th>
+                            <th style="width: 12%;">Start Date</th>
+                            <th style="width: 12%;">End Date</th>
+                            <th style="width: 10%;">Status</th>
+                            <th style="width: 15%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int index = 1;
+                        }
+                        @foreach (var election in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">@index</td>
+                                <td><strong>@election.Title</strong></td>
+                                <td><span class="badge bg-info">@election.TypeDisplayName</span></td>
+                                <td><small class="text-secondary">@(election.Description.Length > 50 ? election.Description.Substring(0, 50) + "..." : election.Description)</small></td>
+                                <td><small>@election.StartDate.ToString("MMM dd, yyyy")</small></td>
+                                <td><small>@election.EndDate.ToString("MMM dd, yyyy")</small></td>
+                                <td>
+                                    @if (election.Status == "Ongoing")
+                                    {
+                                        <span class="badge bg-success">@election.Status</span>
+                                    }
+                                    else if (election.Status == "Upcoming")
+                                    {
+                                        <span class="badge bg-warning">@election.Status</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">@election.Status</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-controller="Election" asp-action="Details" asp-route-id="@election.ElectionId" class="btn btn-primary btn-sm">View Details & Vote</a>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    </tbody>
+                </table>
             </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h5>No ongoing elections found</h5>
+                <p>There are currently no elections matching your selected filter.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Quick Links -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-md);">
+    <div class="card shadow-sm">
+        <div class="card-body text-center">
+            <h5 class="card-title">Parties</h5>
+            <p class="card-text">View and manage Romanian political parties</p>
+            <a asp-controller="Party" asp-action="Index" class="btn btn-primary">Go to Parties</a>
         </div>
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm h-100">
-                <img src="https://randomuser.me/api/portraits/men/1.jpg" class="card-img-top p-4" style="height: 180px; object-fit: contain;" alt="Candidate" />
-                <div class="card-body">
-                    <h5 class="card-title">Candidates</h5>
-                    <p class="card-text">View, add, edit, or delete candidates and see their party affiliation.</p>
-                    <a asp-controller="Candidate" asp-action="Index" class="btn btn-success">Go to Candidates</a>
-                </div>
-            </div>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body text-center">
+            <h5 class="card-title">Candidates</h5>
+            <p class="card-text">View and manage election candidates</p>
+            <a asp-controller="Candidate" asp-action="Index" class="btn btn-success">Go to Candidates</a>
+        </div>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body text-center">
+            <h5 class="card-title">Statistics</h5>
+            <p class="card-text">View election statistics and analytics</p>
+            <a asp-controller="Statistics" asp-action="Index" class="btn btn-info">View Statistics</a>
         </div>
     </div>
 </div>
-@* End of change: Beautiful homepage for party/candidate management system *@
+
+<style>
+    .fw-bold {
+        font-weight: 600;
+    }
+    
+    .text-secondary {
+        color: var(--text-secondary);
+    }
+</style>

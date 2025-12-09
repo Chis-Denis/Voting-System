@@ -27,5 +27,9 @@ public class Candidate
     public int? PartyId { get; set; }
     
     public Party? Party { get; set; }
+
+    // Navigation properties
+    public ICollection<ElectionCandidate> ElectionCandidates { get; set; } = new List<ElectionCandidate>();
+    public ICollection<Vote> Votes { get; set; } = new List<Vote>();
 }
 

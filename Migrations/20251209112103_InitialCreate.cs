@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -7,11 +8,31 @@
 namespace ASP1.Migrations
 {
     /// <inheritdoc />
-    public partial class MakePartyIdNullableOnCandidate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Elections",
+                columns: table => new
+                {
+                    ElectionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Elections", x => x.ElectionId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Parties",
                 columns: table => new
@@ -51,6 +72,17 @@ namespace ASP1.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Elections",
+                columns: new[] { "ElectionId", "CreatedAt", "Description", "EndDate", "IsActive", "StartDate", "Title", "Type", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2025, 11, 29, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), "Elections for mayors, county council presidents, and local council members across all Romanian counties and municipalities.", new DateTime(2026, 1, 3, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), true, new DateTime(2025, 12, 4, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), "Local Elections 2024", 1, null },
+                    { 2, new DateTime(2025, 11, 24, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), "Elections for members of the Chamber of Deputies and the Senate of Romania.", new DateTime(2025, 12, 29, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), true, new DateTime(2025, 11, 29, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), "Parliamentary Elections 2024", 2, null },
+                    { 3, new DateTime(2025, 12, 1, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), "Election for the President of Romania. Citizens vote for the head of state who serves a five-year term.", new DateTime(2026, 1, 5, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), true, new DateTime(2025, 12, 6, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), "Presidential Elections 2024", 3, null },
+                    { 4, new DateTime(2025, 11, 27, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), "National referendum on proposed constitutional amendments regarding judicial reform and anti-corruption measures.", new DateTime(2026, 1, 1, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), true, new DateTime(2025, 12, 2, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517), "Constitutional Referendum 2024", 4, null }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Parties",
                 columns: new[] { "PartyId", "Description", "LogoUrl", "Name" },
                 values: new object[,]
@@ -83,6 +115,9 @@ namespace ASP1.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Candidates");
+
+            migrationBuilder.DropTable(
+                name: "Elections");
 
             migrationBuilder.DropTable(
                 name: "Parties");

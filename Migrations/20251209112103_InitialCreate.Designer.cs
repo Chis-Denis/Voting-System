@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250621085146_MakePartyIdNullableOnCandidate")]
-    partial class MakePartyIdNullableOnCandidate
+    [Migration("20251209112103_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,6 +101,93 @@ namespace ASP1.Migrations
                             Name = "Elena Dumitru",
                             PartyId = 4,
                             Position = "Senator"
+                        });
+                });
+
+            modelBuilder.Entity("ASP1.Backend.Domain.Entities.Election", b =>
+                {
+                    b.Property<int>("ElectionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ElectionId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ElectionId");
+
+                    b.ToTable("Elections");
+
+                    b.HasData(
+                        new
+                        {
+                            ElectionId = 1,
+                            CreatedAt = new DateTime(2025, 11, 29, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            Description = "Elections for mayors, county council presidents, and local council members across all Romanian counties and municipalities.",
+                            EndDate = new DateTime(2026, 1, 3, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            IsActive = true,
+                            StartDate = new DateTime(2025, 12, 4, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            Title = "Local Elections 2024",
+                            Type = 1
+                        },
+                        new
+                        {
+                            ElectionId = 2,
+                            CreatedAt = new DateTime(2025, 11, 24, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            Description = "Elections for members of the Chamber of Deputies and the Senate of Romania.",
+                            EndDate = new DateTime(2025, 12, 29, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            IsActive = true,
+                            StartDate = new DateTime(2025, 11, 29, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            Title = "Parliamentary Elections 2024",
+                            Type = 2
+                        },
+                        new
+                        {
+                            ElectionId = 3,
+                            CreatedAt = new DateTime(2025, 12, 1, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            Description = "Election for the President of Romania. Citizens vote for the head of state who serves a five-year term.",
+                            EndDate = new DateTime(2026, 1, 5, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            IsActive = true,
+                            StartDate = new DateTime(2025, 12, 6, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            Title = "Presidential Elections 2024",
+                            Type = 3
+                        },
+                        new
+                        {
+                            ElectionId = 4,
+                            CreatedAt = new DateTime(2025, 11, 27, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            Description = "National referendum on proposed constitutional amendments regarding judicial reform and anti-corruption measures.",
+                            EndDate = new DateTime(2026, 1, 1, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            IsActive = true,
+                            StartDate = new DateTime(2025, 12, 2, 11, 21, 3, 241, DateTimeKind.Utc).AddTicks(8517),
+                            Title = "Constitutional Referendum 2024",
+                            Type = 4
                         });
                 });
 

@@ -2,24 +2,34 @@
 @{
     ViewData["Title"] = "Delete Party";
 }
-<h1>Delete Party</h1>
-<p>Are you sure you want to delete this party?</p>
-@* Start of change: Party delete form *@
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="PartyId" />
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" readonly />
+
+<h1 class="mb-4">Delete Party</h1>
+
+<div class="card shadow-md" style="border-color: var(--danger-color);">
+    <div class="card-body">
+        <div style="background-color: #fef2f2; padding: var(--spacing-md); border-radius: var(--radius-md); margin-bottom: var(--spacing-md);">
+            <strong style="color: var(--danger-color);">⚠️ Warning: Are you sure you want to delete this party?</strong>
+            <p style="color: var(--text-secondary); margin: var(--spacing-xs) 0 0 0;">This action cannot be undone.</p>
+        </div>
+        
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="PartyId" />
+            <div class="form-group">
+                <label>Party Name</label>
+                <input asp-for="Name" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3" readonly></textarea>
+            </div>
+            <div class="form-group">
+                <label>Logo URL</label>
+                <input asp-for="LogoUrl" class="form-control" readonly />
+            </div>
+            <div style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-lg);">
+                <button type="submit" class="btn btn-danger">Delete Party</button>
+                <a asp-action="Index" class="btn btn-outline-primary">Cancel</a>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <input asp-for="Description" class="form-control" readonly />
-    </div>
-    <div class="form-group">
-        <label asp-for="LogoUrl"></label>
-        <input asp-for="LogoUrl" class="form-control" readonly />
-    </div>
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
-@* End of change: Party delete form *@ 
+</div>

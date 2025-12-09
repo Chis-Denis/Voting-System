@@ -1,0 +1,240 @@
+@model ASP1.Backend.ViewModels.ElectionDetailsViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    var counties = ViewBag.Counties as IEnumerable<ASP1.Backend.Domain.Entities.County> ?? new List<ASP1.Backend.Domain.Entities.County>();
+    var candidates = ViewBag.ElectionCandidates as IEnumerable<ASP1.Backend.Domain.Entities.Candidate> ?? new List<ASP1.Backend.Domain.Entities.Candidate>();
+}
+
+<div class="mb-4">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
+        <div>
+            <h1>@Model.Title</h1>
+            <p class="lead">@Model.Description</p>
+        </div>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">Back to Elections</a>
+    </div>
+    
+    <div style="display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-lg);">
+        <span class="badge bg-info">@Model.TypeDisplayName</span>
+        <span class="badge @(Model.Status == "Ongoing" ? "bg-success" : "bg-secondary")">@Model.Status</span>
+        <span class="text-secondary">Start: @Model.StartDate.ToString("MMM dd, yyyy")</span>
+        <span class="text-secondary">End: @Model.EndDate.ToString("MMM dd, yyyy")</span>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="card" style="background-color: #064e3b; border-color: #10b981; margin-bottom: var(--spacing-md);">
+        <div class="card-body">
+            <strong style="color: #34d399;">✓ @TempData["SuccessMessage"]</strong>
+        </div>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="card" style="background-color: #7f1d1d; border-color: #ef4444; margin-bottom: var(--spacing-md);">
+        <div class="card-body">
+            <strong style="color: #f87171;">✗ @TempData["ErrorMessage"]</strong>
+        </div>
+    </div>
+}
+
+<!-- Overall Statistics -->
+<div class="card shadow-md mb-4">
+    <div class="card-header">
+        <h3>Overall Statistics</h3>
+    </div>
+    <div class="card-body">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md);">
+            <div style="text-align: center; padding: var(--spacing-md); background: var(--bg-secondary); border-radius: var(--radius-md);">
+                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">@Model.TotalVotes.ToString("N0")</div>
+                <div class="text-secondary">Total Votes</div>
+            </div>
+            <div style="text-align: center; padding: var(--spacing-md); background: var(--bg-secondary); border-radius: var(--radius-md);">
+                <div style="font-size: 2rem; font-weight: 700; color: var(--secondary-color);">@Model.TotalEligibleVoters.ToString("N0")</div>
+                <div class="text-secondary">Eligible Voters</div>
+            </div>
+            <div style="text-align: center; padding: var(--spacing-md); background: var(--bg-secondary); border-radius: var(--radius-md);">
+                <div style="font-size: 2rem; font-weight: 700; color: var(--accent-color);">@Model.VoterTurnoutPercentage.ToString("F2")%</div>
+                <div class="text-secondary">Voter Turnout</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Voting Section -->
+@if (Model.IsActive && DateTime.UtcNow >= Model.StartDate && DateTime.UtcNow <= Model.EndDate)
+{
+    <div class="card shadow-md mb-4">
+        <div class="card-header">
+            <h3>Cast Your Vote</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Vote" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="ElectionId" value="@Model.ElectionId" />
+                
+                <div class="form-group">
+                    <label>Select County</label>
+                    <select name="CountyId" class="form-control" required>
+                        <option value="">-- Select Your County --</option>
+                        @foreach (var county in counties)
+                        {
+                            <option value="@county.CountyId">@county.Name (@county.Code)</option>
+                        }
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Select Candidate</label>
+                    <select name="CandidateId" class="form-control" required>
+                        <option value="">-- Select a Candidate --</option>
+                        @foreach (var candidate in candidates)
+                        {
+                            <option value="@candidate.CandidateId">@candidate.Name - @(candidate.Party?.Name ?? "Independent")</option>
+                        }
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-success">Submit Vote</button>
+            </form>
+        </div>
+    </div>
+}
+
+<!-- Candidate Statistics -->
+<div class="card shadow-md mb-4">
+    <div class="card-header">
+        <h3>Candidate Results</h3>
+    </div>
+    <div class="card-body" style="padding: 0;">
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Candidate</th>
+                        <th>Party</th>
+                        <th>Position</th>
+                        <th>Votes</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Candidates.Count; i++)
+                    {
+                        var candidate = Model.Candidates[i];
+                        <tr>
+                            <td><strong>#@(i + 1)</strong></td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                                    @if (!string.IsNullOrEmpty(candidate.ImageUrl))
+                                    {
+                                        <img src="@candidate.ImageUrl" alt="@candidate.Name" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" />
+                                    }
+                                    <strong>@candidate.Name</strong>
+                                </div>
+                            </td>
+                            <td>@candidate.PartyName</td>
+                            <td>@candidate.Position</td>
+                            <td><strong>@candidate.VoteCount.ToString("N0")</strong></td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: var(--spacing-xs);">
+                                    <div style="flex: 1; background: var(--bg-tertiary); border-radius: var(--radius-sm); height: 8px; overflow: hidden;">
+                                        <div style="background: var(--primary-color); height: 100%; width: @(candidate.VotePercentage)%"></div>
+                                    </div>
+                                    <strong>@candidate.VotePercentage.ToString("F2")%</strong>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Party Statistics -->
+<div class="card shadow-md mb-4">
+    <div class="card-header">
+        <h3>Party Statistics</h3>
+    </div>
+    <div class="card-body" style="padding: 0;">
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Party</th>
+                        <th>Candidates</th>
+                        <th>Total Votes</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.PartyStatistics.Count; i++)
+                    {
+                        var party = Model.PartyStatistics[i];
+                        <tr>
+                            <td><strong>#@(i + 1)</strong></td>
+                            <td><strong>@party.PartyName</strong></td>
+                            <td>@party.CandidateCount</td>
+                            <td><strong>@party.TotalVotes.ToString("N0")</strong></td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: var(--spacing-xs);">
+                                    <div style="flex: 1; background: var(--bg-tertiary); border-radius: var(--radius-sm); height: 8px; overflow: hidden;">
+                                        <div style="background: var(--secondary-color); height: 100%; width: @(party.VotePercentage)%"></div>
+                                    </div>
+                                    <strong>@party.VotePercentage.ToString("F2")%</strong>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- County Statistics -->
+<div class="card shadow-md mb-4">
+    <div class="card-header">
+        <h3>County Statistics</h3>
+    </div>
+    <div class="card-body" style="padding: 0;">
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>County</th>
+                        <th>Code</th>
+                        <th>Votes Cast</th>
+                        <th>Eligible Voters</th>
+                        <th>Turnout</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var county in Model.CountyStatistics.OrderByDescending(c => c.TurnoutPercentage))
+                    {
+                        <tr>
+                            <td><strong>@county.CountyName</strong></td>
+                            <td>@county.CountyCode</td>
+                            <td>@county.VotesCast.ToString("N0")</td>
+                            <td>@county.EligibleVoters.ToString("N0")</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: var(--spacing-xs);">
+                                    <div style="flex: 1; background: var(--bg-tertiary); border-radius: var(--radius-sm); height: 8px; overflow: hidden;">
+                                        <div style="background: var(--accent-color); height: 100%; width: @(Math.Min(county.TurnoutPercentage, 100))%"></div>
+                                    </div>
+                                    <strong>@county.TurnoutPercentage.ToString("F2")%</strong>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

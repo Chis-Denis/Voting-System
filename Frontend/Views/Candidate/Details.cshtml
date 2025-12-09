@@ -2,22 +2,42 @@
 @{
     ViewData["Title"] = "Candidate Details";
 }
-<h1>Candidate Details</h1>
-@* Start of change: Candidate details section *@
-<div class="card" style="width: 24rem;">
-    @if (!string.IsNullOrEmpty(Model.ImageUrl))
-    {
-        <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.Name" style="max-height:200px;object-fit:cover;" />
-    }
-    <div class="card-body">
-        <h3 class="card-title">@Model.Name</h3>
-        <p class="card-text">@Model.Description</p>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item"><strong>Party:</strong> @Model.PartyName</li>
-            <li class="list-group-item"><strong>ID:</strong> @Model.CandidateId</li>
-            <li class="list-group-item"><strong>Age:</strong> @Model.Age</li>
-            <li class="list-group-item"><strong>Position:</strong> @Model.Position</li>
-        </ul>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+    <h1>Candidate Details</h1>
+    <div style="display: flex; gap: var(--spacing-xs);">
+        <a asp-action="Edit" asp-route-id="@Model.CandidateId" class="btn btn-warning">Edit</a>
+        <a asp-action="Index" class="btn btn-outline-primary">Back to List</a>
     </div>
 </div>
-@* End of change: Candidate details section *@ 
+
+<div class="card shadow-md" style="max-width: 600px;">
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div style="width: 100%; height: 300px; overflow: hidden; background: var(--bg-secondary);">
+            <img src="@Model.ImageUrl" alt="@Model.Name" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+    }
+    <div class="card-body">
+        <h2 class="card-title">@Model.Name</h2>
+        <p class="card-text">@Model.Description</p>
+        <div style="display: grid; gap: var(--spacing-sm); margin-top: var(--spacing-md);">
+            <div style="display: flex; justify-content: space-between; padding: var(--spacing-sm); background: var(--bg-secondary); border-radius: var(--radius-md);">
+                <strong>Party:</strong>
+                <span>@(string.IsNullOrWhiteSpace(Model.PartyName) ? "Independent" : Model.PartyName)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: var(--spacing-sm); background: var(--bg-secondary); border-radius: var(--radius-md);">
+                <strong>Position:</strong>
+                <span>@Model.Position</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: var(--spacing-sm); background: var(--bg-secondary); border-radius: var(--radius-md);">
+                <strong>Age:</strong>
+                <span>@Model.Age years</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: var(--spacing-sm); background: var(--bg-secondary); border-radius: var(--radius-md);">
+                <strong>ID:</strong>
+                <span>#@Model.CandidateId</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,42 +2,69 @@
 @{
     ViewData["Title"] = "Party Details";
 }
-<h1>@Model.Name</h1>
-<p>@Model.Description</p>
-@if (!string.IsNullOrEmpty(Model.LogoUrl))
-{
-    <img src="@Model.LogoUrl" alt="@Model.Name Logo" width="100" />
-}
-<h2>Candidates</h2>
-@* Start of change: Candidate list table for party details *@
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+    <h1>@Model.Name</h1>
+    <div style="display: flex; gap: var(--spacing-xs);">
+        <a asp-action="Edit" asp-route-id="@Model.PartyId" class="btn btn-warning">Edit</a>
+        <a asp-action="Index" class="btn btn-outline-primary">Back to List</a>
+    </div>
+</div>
+
+<div class="card shadow-md mb-4">
+    <div class="card-body">
+        @if (!string.IsNullOrEmpty(Model.LogoUrl))
+        {
+            <div style="text-align: center; margin-bottom: var(--spacing-md);">
+                <img src="@Model.LogoUrl" alt="@Model.Name Logo" style="max-width: 200px; max-height: 200px; border-radius: var(--radius-lg);" />
+            </div>
+        }
+        <p style="font-size: 1.125rem; color: var(--text-secondary);">@Model.Description</p>
+    </div>
+</div>
+
+<h2 class="mb-4">Candidates</h2>
+
 @if (Model.Candidates != null && Model.Candidates.Any())
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Age</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var candidate in Model.Candidates)
-            {
-                <tr>
-                    <td>@candidate.Name</td>
-                    <td>@candidate.Position</td>
-                    <td>@candidate.Age</td>
-                    <td>
-                        <a asp-controller="Candidate" asp-action="Details" asp-route-id="@candidate.CandidateId" class="btn btn-info">View</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="card shadow-md">
+        <div class="card-body" style="padding: 0;">
+            <div style="overflow-x: auto;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Position</th>
+                            <th>Age</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var candidate in Model.Candidates)
+                        {
+                            <tr>
+                                <td><strong>@candidate.Name</strong></td>
+                                <td>@candidate.Position</td>
+                                <td>@candidate.Age</td>
+                                <td style="text-align: right;">
+                                    <a asp-controller="Candidate" asp-action="Details" asp-route-id="@candidate.CandidateId" class="btn btn-primary btn-sm">View</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 }
 else
 {
-    <p>No candidates for this party.</p>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="empty-state">
+                <div class="empty-state-icon">👤</div>
+                <p class="text-secondary">No candidates for this party.</p>
+            </div>
+        </div>
+    </div>
 }
-@* End of change: Candidate list table for party details *@ 

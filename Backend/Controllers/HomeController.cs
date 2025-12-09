@@ -1,17 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
+using ASP1.Backend.Services.Interfaces;
+using ASP1.Backend.Domain.Entities;
 
 namespace ASP1.Backend.Controllers;
 
-// Start of change: Minimal HomeController for default route *@
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly IElectionService _electionService;
+
+    public HomeController(IElectionService electionService)
     {
-        return View();
+        _electionService = electionService;
     }
+
+    public async Task<IActionResult> Index(ElectionType? type = null)
+    {
+        var elections = await _electionService.GetElectionsByTypeAsync(type);
+        ViewBag.SelectedType = type;
+        return View(elections);
+    }
+
     public IActionResult Privacy()
     {
         return View();
     }
-}
-// End of change: Minimal HomeController for default route *@ 
+} 
