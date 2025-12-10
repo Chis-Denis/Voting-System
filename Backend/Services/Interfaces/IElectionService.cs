@@ -14,3 +14,4 @@ public interface IElectionService
     Task<bool> ElectionExistsAsync(int id);
 }
 
+

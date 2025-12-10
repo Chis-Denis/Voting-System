@@ -8,3 +8,4 @@ public interface IElectionCandidateRepository : IRepository<ElectionCandidate>
     Task<bool> IsCandidateInElectionAsync(int electionId, int candidateId);
 }
 
+

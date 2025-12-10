@@ -48,3 +48,4 @@ public class VoteRepository : Repository<Vote>, IVoteRepository
     }
 }
 
+

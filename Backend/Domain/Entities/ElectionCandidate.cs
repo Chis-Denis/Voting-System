@@ -20,3 +20,4 @@ public class ElectionCandidate
     public Candidate Candidate { get; set; } = null!;
 }
 
+

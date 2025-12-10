@@ -59,3 +59,4 @@ public class CountyVoteViewModel
     public double TurnoutPercentage { get; set; }
 }
 
+

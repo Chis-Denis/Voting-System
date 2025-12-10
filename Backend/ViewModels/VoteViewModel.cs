@@ -14,3 +14,4 @@ public class VoteViewModel
     public int CountyId { get; set; }
 }
 
+

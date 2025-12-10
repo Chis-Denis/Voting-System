@@ -8,3 +8,4 @@ public interface ICountyRepository : IRepository<County>
     Task<int> GetTotalEligibleVotersAsync();
 }
 
+

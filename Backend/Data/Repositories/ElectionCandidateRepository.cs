@@ -26,3 +26,4 @@ public class ElectionCandidateRepository : Repository<ElectionCandidate>, IElect
     }
 }
 
+

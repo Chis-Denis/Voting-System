@@ -22,3 +22,4 @@ public class County
     public ICollection<Vote> Votes { get; set; } = new List<Vote>();
 }
 
+

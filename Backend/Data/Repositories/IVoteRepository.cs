@@ -11,3 +11,4 @@ public interface IVoteRepository : IRepository<Vote>
     Task<IEnumerable<Vote>> GetVotesByElectionAsync(int electionId);
 }
 
+

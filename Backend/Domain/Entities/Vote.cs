@@ -26,3 +26,4 @@ public class Vote
     public County County { get; set; } = null!;
 }
 
+

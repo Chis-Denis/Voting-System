@@ -9,3 +9,4 @@ public interface IElectionRepository : IRepository<Election>
     Task<IEnumerable<Election>> GetActiveElectionsAsync();
 }
 
+

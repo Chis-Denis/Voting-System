@@ -8,3 +8,4 @@ public interface IVoteService
     Task<ElectionDetailsViewModel> GetElectionDetailsAsync(int electionId);
 }
 
+

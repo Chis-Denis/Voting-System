@@ -37,3 +37,4 @@ public class ElectionRepository : Repository<Election>, IElectionRepository
     }
 }
 
+
